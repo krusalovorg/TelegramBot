@@ -1,0 +1,6 @@
+/venv
+.idea
+*.pyc
+config.ini
+.session
+test.session
