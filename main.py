@@ -1,4 +1,6 @@
 from pyrogram import Client, filters
+from pyrogram.errors import FloodWait
+from pyrogram.types import ChatPermissions
 import os, time, random
 
 app = Client("test")
@@ -95,5 +97,27 @@ def private(client, message):
             while_anim_index += 1
     else:
         message.edit(message.text+"🤷")
+
+
+@app.on_message(filters.command("write", prefixes=".") & filters.me)
+def type(_, msg):
+    orig_text = msg.text.split(".write ", maxsplit=1)[1]
+    text = orig_text
+    tbp = ""  # to be printed
+    typing_symbol = "▒"
+
+    while (tbp != orig_text):
+        try:
+            msg.edit(tbp + typing_symbol)
+            time.sleep(0.05)  # 50 ms
+
+            tbp = tbp + text[0]
+            text = text[1:]
+
+            msg.edit(tbp)
+            time.sleep(0.05)
+
+        except FloodWait as e:
+            time.sleep(e.x)
 
 app.run()
