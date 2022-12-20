@@ -120,4 +120,80 @@ def type(_, msg):
         except FloodWait as e:
             time.sleep(e.x)
 
+cmd_cho = ".повтор "
+@app.on_message(filters.command("повтор", prefixes=".") & filters.me)
+def repeate(_, msg):
+    words = msg.text.split(" ")
+
+    if len(words) < 2:
+        msg.edit("Не верный синтаксис: .повтор <количество: num> <текст: string>")
+        return
+
+    try:
+        nums = int(words[1])
+    except:
+        msg.edit("Число не должно быть с буквами")
+        return
+    text = msg.text.replace(f"{cmd_cho}{nums} ", "")
+
+    for i in range(nums):
+        msg.edit(text * (i+1))
+        time.sleep(0.05)
+
+SPACE = '❄'
+STRAR = '🎄'
+random_toys = ['🍊','🦌','🍾','⛄','✨','🎉']
+
+
+def toy(line):
+    tmp = ''
+    index = random.randint(0, len(line)-1)
+
+    for i in range(len(line)):
+        tmp += line[i] if i != index else random.choice(random_toys)
+
+    return tmp
+
+cmd_tree = ".елка "
+@app.on_message(filters.command("елка", prefixes=".") & filters.me)
+def tree(_, msg):
+    words = msg.text.split(" ")
+
+    if len(words) < 1:
+        msg.edit("Не верный синтаксис: .елка <высота: num> #<ширина: num>")
+        return
+
+    try:
+        rows = int(words[1])
+    except:
+        msg.edit("Число не должно быть с буквами")
+        return
+
+    res = ""
+
+    spaces = rows-1
+    stars = 1
+
+    # if len(words) == 2:
+    #     try:
+    #         stars = int(words[2])
+    #     except:
+    #         msg.edit("Не верный синтаксис: .елка <высота: num> <ширина: num>")
+    #         return
+    # else:
+    #     stars = 2
+
+    for i in range(rows):
+        print((SPACE*spaces) +
+            ((STRAR*stars) if (i % 2) != 0 else toy(STRAR*stars)) +
+            (SPACE*spaces))
+        res += ((SPACE*spaces) +
+            ((STRAR*stars) if (i % 2) != 0 else toy(STRAR*stars)) +
+            (SPACE*spaces))+"\n"
+        msg.edit(res)
+
+        stars += 2
+        spaces -= 1
+        time.sleep(0.05)
+
 app.run()
